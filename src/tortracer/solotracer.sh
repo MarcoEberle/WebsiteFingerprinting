@@ -1,12 +1,4 @@
-#!/bin/sh
-
-ctrl_c () {
-	pkill firefox --signal SIGTERM
-	echo "tortracer stopped fingerprinting"
-	exit 0
-}
-
-trap ctrl_c INT
+#!/bin/bash
 
 echo "  _                _                                "
 sleep 0.1
@@ -33,10 +25,10 @@ else
 fi
 
 create_fingerprint () {
-	tcpdump -i lo -n -vvv -tttt port 9150 > traces/"$FILE_NAME" &
-	./tor-browsers/tor-browser-1/Browser/start-tor-browser "$WEBSITE" &
-	local PID=$! 
-	echo "$PID"
+	rm tor-browsers/tor-browser-1/Browser/TorBrowser/Data/Tor/state
+	tcpdump -i lo -n -vvv -tttt port 9150 > traces/"$FILE_NAME" & tcpdumpPID=$!
+	./tor-browsers/tor-browser-1/Browser/start-tor-browser "$WEBSITE" & torPID=$!
+	echo "$torPID $tcpdumpPID"
 }
 
 while true
@@ -46,6 +38,12 @@ do
 	echo "Website Fingerprint of $WEBSITE starts at $TIMESTAMP"
 	PID="$(create_fingerprint)"
 	echo "PID from call_website $PID"
-	sleep 30
+	echo $$
+	sleep 120
 	pkill firefox --signal SIGTERM
+	pkill tcpdump
+	sleep 180
+	#kill -TERM -- -$$
+	# rm -r tor-browsers/tor-browser-1/Browser/TorBrowser/Data/Browser/Caches/*
+	# cp -r tor-browsers/tor-browser-1/Browser/TorBrowser/Data/Browser/profile.default.example tor-browsers/tor-browser-1/Browser/TorBrowser/Data/Browser/Caches/profile.default
 done
