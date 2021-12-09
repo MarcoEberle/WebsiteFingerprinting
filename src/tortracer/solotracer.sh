@@ -25,9 +25,9 @@ else
 fi
 
 create_fingerprint () {
-	rm tor-browsers/tor-browser-1/Browser/TorBrowser/Data/Tor/state
-	tcpdump -i lo -n -vvv -tttt port 9150 > traces/"$FILE_NAME" & tcpdumpPID=$!
-	./tor-browsers/tor-browser-1/Browser/start-tor-browser "$WEBSITE" & torPID=$!
+	# rm tor-browsers/tor-browser-1/Browser/TorBrowser/Data/Tor/state
+	#tcpdump -i lo -n -vvv -tttt port 9150 > ../traces/"$FILE_NAME" & tcpdumpPID=$!
+	./tor-browsers/tor-browser-2/Browser/start-tor-browser "$WEBSITE" & torPID=$!
 	echo "$torPID $tcpdumpPID"
 }
 

@@ -1,12 +1,9 @@
 INFORMATION ABOUT PORTS OF TOR-BROWSERS:
 
 
-Every tor-browser is configured with its own SocksPort and ControlPort to take multiple traces at a same time without interfering.
-You can either set/change ports in Tor Browser under about:config or manually under /WebsiteFingerprinting/src/tortracer/tor-browsers/tor-browser-<NUMBER>/Browser/TorBrowser/Data/Browser/profile.default/prefs.js.
-Already existing folder (number 1-16) include in prefs.js user_pref("network.proxy.socks_port", 9850); and user_pref("extensions.torlauncher.control_port", 9158);. 
-Just change the value to your prefered port. 
-New created (copied) tor-browser folder don't have these user_prefs. 
-Copy them into prefs.js and set your prefered ports.
+Every tor-browser is configured with its own SocksPort and ControlPort to take multiple traces at the same time without interfering each other.
+
+You can set/change ports in every Tor Browser under about:config.
 
 tor-browser-1:
 SocksPort	9150
