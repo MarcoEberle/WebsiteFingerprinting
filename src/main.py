@@ -1,7 +1,9 @@
 import datetime
+import shutil
 import subprocess
 from multiprocessing import Process
 from time import sleep
+import stem.process
 from requests import RequestException
 from stem import Signal
 from stem.control import Controller
@@ -11,7 +13,6 @@ import logging
 from fake_headers import Headers
 
 
-# TODO: integrate status code in file
 def create_fingerprint(url, port, proxy, time):
     print("Creating Fingerprint of:", url, port)
     full_url = "https://www." + url + "/"
@@ -19,20 +20,27 @@ def create_fingerprint(url, port, proxy, time):
     file = open("traces/" + timestamp + "_" + url + ".txt", "w")
     tcpdump = subprocess.Popen(['tcpdump', '-i', 'lo', '-n', '-vv', '-tttt', '-l', 'port', port], stdout=file)
     sleep(5)
-    header = get_header(url)
+    header = get_header()
+    status_code = 0
     try:
         response = requests.get(full_url, proxies=proxy, timeout=time, headers=header)
+        status_code = response.status_code
         print(response.status_code, url)
     except RequestException as ex:
         print(url + ":", ex)
         logging.error(ex)
         pass
+
     tcpdump.kill()
     tcpdump.wait()
-    sleep(60)
-    change_exit_node(port)
-    # change_entry_guard()
-    sleep(5)
+    file.write(str(status_code))
+    file.close()
+    # change_exit_node(port)
+
+
+def start_tor_process(torrc):
+    print("Launching torrc." + torrc)
+    return stem.process.launch_tor(torrc_path=torrc, timeout=120, take_ownership=True)
 
 
 # Open a new circuit and get a new exit node, e.g. new IP address.
@@ -42,24 +50,29 @@ def change_exit_node(port):
         controller.authenticate()
         if controller.is_newnym_available():
             controller.signal(Signal.NEWNYM)
+    sleep(5)
 
 
-# TODO: remove state file
-def change_entry_guard(path):
-    if os.path.isfile(path):
-        os.remove(path)
+# Remove data directory to force tor to use new entry guards.
+def change_entry_guard():
+    for files in os.listdir(path_to_data_directory):
+        path = os.path.join(path_to_data_directory, files)
+        try:
+            shutil.rmtree(path)
+        except OSError:
+            os.remove(path)
 
 
 # TODO: Change at home to all_websites and on HM to clean_websites
 def get_new_url():
-    return all_websites[current_url_index % len(all_websites)]
+    return clean_websites[current_url_index % len(clean_websites)]
 
 
 def get_new_port():
-    return ports[current_port_index % max_sockets]
+    return ports[current_port_index % max_tors]
 
 
-def get_header(url):
+def get_header():
     header = Headers(
         browser="firefox",
         os="random",
@@ -132,26 +145,47 @@ if __name__ == '__main__':
     ports = ["9150", "9250", "9350", "9450", "9550", "9650", "9750", "9850", "9950", "10050", "10150", "10250", "10350",
              "10450", "10550", "10650"]
 
-    max_sockets = 8
-    timeout = 120
+    torrc_path = "/etc/tor/torrc."
+    path_to_data_directory = "/home/ebse/Desktop/TorDataDirectory/"
+    change_entry_guard()
+    timeout = 180
     current_url_index = 0
     current_port_index = 0
+
     while True:
-        processes = []
-        for i in range(max_sockets):
+        max_tors = 8
+        tor_processes = []
+        fingerprint_processes = []
+        for torrc_index in range(1, max_tors + 1):
+            try:
+                tor_processes.append(start_tor_process(torrc_path + str(torrc_index)))
+            except OSError as error:
+                print(error)
+                max_tors -= 1
+
+        for tor_index in range(max_tors):
             current_url = get_new_url()
             current_port = get_new_port()
             proxies = {
                 'http': 'socks5://localhost:' + current_port,
                 'https': 'socks5://localhost:' + current_port
             }
-            processes.append(Process(target=create_fingerprint, args=(current_url, current_port, proxies, timeout)))
+            fingerprint_processes.append(
+                Process(target=create_fingerprint, args=(current_url, current_port, proxies, timeout)))
             current_url_index += 1
             current_port_index += 1
 
         # Run processes
-        for process in processes:
+        for process in fingerprint_processes:
             process.start()
         # Exit the completed processes
-        for process in processes:
+        for process in fingerprint_processes:
             process.join()
+
+        # Kill tor processes
+        for tor in tor_processes:
+            tor.kill()
+        for tor in tor_processes:
+            tor.wait()
+
+        change_entry_guard()
