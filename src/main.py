@@ -13,7 +13,7 @@ import logging
 from fake_headers import Headers
 
 
-def create_fingerprint(url, port, proxy, time):
+def create_fingerprint(url, port, proxy):
     print("Creating Fingerprint of:", url, port)
     full_url = "https://www." + url + "/"
     timestamp = datetime.datetime.now().strftime("%d.%m_%H:%M:%S.%f")
@@ -23,24 +23,26 @@ def create_fingerprint(url, port, proxy, time):
     header = get_header()
     status_code = 0
     try:
-        response = requests.get(full_url, proxies=proxy, timeout=time, headers=header)
+        response = requests.get(full_url, proxies=proxy, headers=header)
         status_code = response.status_code
+        status_logger.info(url + " : " + str(status_code))
         print(response.status_code, url)
+        print(requests.get("http://httpbin.org/ip", proxies=proxy, headers=header).text)
     except RequestException as ex:
-        print(url + ":", ex)
-        logging.error(ex)
+        print(url + " : ", str(ex))
+        error_logger.info(url + " : " + str(ex))
         pass
 
     tcpdump.kill()
     tcpdump.wait()
     file.write(str(status_code))
     file.close()
-    # change_exit_node(port)
+    change_exit_node(port)
 
 
 def start_tor_process(torrc):
     print("Launching torrc." + torrc)
-    return stem.process.launch_tor(torrc_path=torrc, timeout=120, take_ownership=True)
+    return stem.process.launch_tor(torrc_path=torrc, take_ownership=True)
 
 
 # Open a new circuit and get a new exit node, e.g. new IP address.
@@ -78,55 +80,19 @@ def get_header():
         os="random",
         headers=True  # generate misc headers
     )
-    """
-    full_url = "https://www." + url + "/"
-    random_user_agents = ["Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0",
-                          "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:95.0) Gecko/20100101 Firefox/95.0",
-                          "Mozilla/5.0 (Macintosh; Intel Mac OS X 12.1; rv:95.0) Gecko/20100101 Firefox/95.0",
-                          "Mozilla/5.0 (X11; Linux i686; rv:95.0) Gecko/20100101 Firefox/95.0",
-                          "Mozilla/5.0 (Linux x86_64; rv:95.0) Gecko/20100101 Firefox/95.0",
-                          "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:95.0) Gecko/20100101 Firefox/95.0",
-                          "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:95.0) Gecko/20100101 Firefox/95.0",
-                          "Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:95.0) Gecko/20100101 Firefox/95.0"]
-
-    headers = {
-        "rokna.net": {"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-                      "Accept-Encoding": "gzip, deflate, br",
-                      "Accept-Language": "en-US,en;q=0.5",
-                      "Connection": "keep-alive",
-                      "Host": "www.rokna.net",
-                      "Origin": "https://www.rokna.net",
-                      "Sec-Fetch-Dest": "document",
-                      "Sec-Fetch-Mode": "navigate",
-                      "Sec-Fetch-Site": "none",
-                      "Sec-Fetch-User": "?1",
-                      "Upgrade-Insecure-Requests": "1",
-                      "User-Agent": random_user_agents[random.randint(0, 7)]
-                      },
-        "whatsapp.com": {"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-                         "Accept-Encoding": "gzip, deflate, br",
-                         "Accept-Language": "en-US,en;q=0.5",
-                         "Connection": "keep-alive",
-                         "Host": "www.whatsapp.com",
-                         "Sec-Fetch-Dest": "document",
-                         "Sec-Fetch-Mode": "navigate",
-                         "Sec-Fetch-Site": "none",
-                         "Sec-Fetch-User": "?1",
-                         "Upgrade-Insecure-Requests": "1",
-                         "User-Agent": random_user_agents[random.randint(0, 7)]},
-        "default": {"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-                    "Accept-Encoding": "gzip, deflate, br",
-                    "Accept-Language": "en-US,en;q=0.5",
-                    "Connection": "keep-alive",
-                    "Upgrade-Insecure-Requests": "1",
-                    "User-Agent": random_user_agents[random.randrange(0, 7)],
-                    "Referer": full_url, }}
-    """
     return header.generate()
 
 
 if __name__ == '__main__':
-    logging.basicConfig(filename='example.log', level=logging.ERROR)
+    status_logger = logging.getLogger("status")
+    error_logger = logging.getLogger("error")
+    status_logger.setLevel(logging.INFO)
+    error_logger.setLevel(logging.INFO)
+    fh_status = logging.FileHandler("status.log", "a")
+    status_logger.addHandler(fh_status)
+    fh_error = logging.FileHandler("error.log", "a")
+    error_logger.addHandler(fh_error)
+
     clean_websites = ["linkedin.com", "gls-pakete.de", "instagram.com", "welt.de", "amazon.com", "varzesh3.com",
                       "youtube.com", "ebay.de", "wikipedia.org", "web.de", "aparat.com", "facebook.com", "filmix.ac",
                       "tiktok.com", "twitter.com", "netflix.com", "dhl.de", "mail.ru", "ok.ru", "t-online.de",
@@ -158,9 +124,11 @@ if __name__ == '__main__':
         fingerprint_processes = []
         for torrc_index in range(1, max_tors + 1):
             try:
+                # TODO: Parallel instead successively
                 tor_processes.append(start_tor_process(torrc_path + str(torrc_index)))
             except OSError as error:
                 print(error)
+                error_logger.info("torrc." + str(torrc_index) + " : " + str(error))
                 max_tors -= 1
 
         for tor_index in range(max_tors):
@@ -170,8 +138,9 @@ if __name__ == '__main__':
                 'http': 'socks5://localhost:' + current_port,
                 'https': 'socks5://localhost:' + current_port
             }
+            # change_exit_node(current_port)
             fingerprint_processes.append(
-                Process(target=create_fingerprint, args=(current_url, current_port, proxies, timeout)))
+                Process(target=create_fingerprint, args=(current_url, current_port, proxies)))
             current_url_index += 1
             current_port_index += 1
 
