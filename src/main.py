@@ -49,7 +49,8 @@ def create_fingerprint(url, port, proxy):
 
 def start_tor_process(torrc):
     print("Launching: " + torrc)
-    return stem.process.launch_tor(torrc_path=torrc, take_ownership=True)
+    stem_process = stem.process.launch_tor(torrc_path=torrc, take_ownership=True)
+    return stem_process
 
 
 # Open a new circuit and get a new exit node, e.g. new IP address.
@@ -131,7 +132,7 @@ if __name__ == '__main__':
         fingerprint_processes = []
         failed_tors = []
         tor_started = True
-
+        """
         for torrc_index in range(1, max_tors + 1):
             current_url = get_new_url()
             current_port = get_new_port()
@@ -152,11 +153,36 @@ if __name__ == '__main__':
                     Process(target=create_fingerprint, args=(current_url, current_port, proxies)))
             current_url_index += 1
             current_port_index += 1
+            """
 
-        # Run processes
+        for torrc_index in range(1, max_tors + 1):
+            arg = torrc_path + str(torrc_index)
+            tor_processes.append(Process(target=start_tor_process, args=([arg])))
+
+        for tor in tor_processes:
+            current_url = get_new_url()
+            current_port = get_new_port()
+            proxies = {
+                'http': 'socks5://localhost:' + current_port,
+                'https': 'socks5://localhost:' + current_port
+            }
+            try:
+                tor.start()
+                print("tor", tor, "started")
+            except OSError as error:
+                print(error)
+                error_logger.info("torrc." + str(torrc_index) + " : " + str(error))
+                tor_started = False
+            if tor_started:
+                fingerprint_processes.append(
+                    Process(target=create_fingerprint, args=(current_url, current_port, proxies)))
+            current_url_index += 1
+            current_port_index += 1
+
+        # Run fingerprint_processes
         for process in fingerprint_processes:
             process.start()
-        # Exit the completed processes
+        # Exit the completed fingerprint_processes
         for process in fingerprint_processes:
             process.join()
 
@@ -164,6 +190,6 @@ if __name__ == '__main__':
         for tor in tor_processes:
             tor.kill()
         for tor in tor_processes:
-            tor.wait()
-
+            tor.join()
+        sleep(30)
         change_entry_guard()
