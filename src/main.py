@@ -13,6 +13,9 @@ import logging
 from fake_headers import Headers
 
 
+# TODO: add https://askubuntu.com/questions/530920/tcpdump-permissions-problem
+# sudo chgrp <user_running_this_code> /usr/sbin/tcpdump
+# sudo chmod 750 /usr/sbin/tcpdump
 def create_fingerprint(url, port, proxy):
     print("Creating Fingerprint of:", url, port)
     full_url = "https://www." + url + "/"
@@ -27,21 +30,25 @@ def create_fingerprint(url, port, proxy):
         status_code = response.status_code
         status_logger.info(url + " : " + str(status_code))
         print(response.status_code, url)
-        print(requests.get("http://httpbin.org/ip", proxies=proxy, headers=header).text)
+        # print(requests.get("http://httpbin.org/ip", proxies=proxy, headers=header).text)
     except RequestException as ex:
         print(url + " : ", str(ex))
-        error_logger.info(url + " : " + str(ex))
+        error_logger.info(timestamp + " : " + url + " : " + str(ex))
         pass
+    finally:
+        tcpdump.kill()
+        tcpdump.wait()
+        file.write(str(status_code))
+        file.close()
 
-    tcpdump.kill()
-    tcpdump.wait()
-    file.write(str(status_code))
-    file.close()
-    change_exit_node(port)
+    try:
+        change_exit_node(port)
+    except Exception:
+        pass
 
 
 def start_tor_process(torrc):
-    print("Launching torrc." + torrc)
+    print("Launching: " + torrc)
     return stem.process.launch_tor(torrc_path=torrc, take_ownership=True)
 
 
@@ -122,25 +129,27 @@ if __name__ == '__main__':
         max_tors = 8
         tor_processes = []
         fingerprint_processes = []
-        for torrc_index in range(1, max_tors + 1):
-            try:
-                # TODO: Parallel instead successively
-                tor_processes.append(start_tor_process(torrc_path + str(torrc_index)))
-            except OSError as error:
-                print(error)
-                error_logger.info("torrc." + str(torrc_index) + " : " + str(error))
-                max_tors -= 1
+        failed_tors = []
+        tor_started = True
 
-        for tor_index in range(max_tors):
+        for torrc_index in range(1, max_tors + 1):
             current_url = get_new_url()
             current_port = get_new_port()
             proxies = {
                 'http': 'socks5://localhost:' + current_port,
                 'https': 'socks5://localhost:' + current_port
             }
-            # change_exit_node(current_port)
-            fingerprint_processes.append(
-                Process(target=create_fingerprint, args=(current_url, current_port, proxies)))
+            try:
+                # TODO: Parallel instead successively
+                tor_processes.append(start_tor_process(torrc_path + str(torrc_index)))
+            except OSError as error:
+                print(error)
+                error_logger.info("torrc." + str(torrc_index) + " : " + str(error))
+                tor_started = False
+
+            if tor_started:
+                fingerprint_processes.append(
+                    Process(target=create_fingerprint, args=(current_url, current_port, proxies)))
             current_url_index += 1
             current_port_index += 1
 
