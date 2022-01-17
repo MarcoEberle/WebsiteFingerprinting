@@ -56,10 +56,14 @@ def start_tor_process(torrc):
 # Open a new circuit and get a new exit node, e.g. new IP address.
 def change_exit_node(port):
     control_port = int(port) + 1
-    with Controller.from_port(port=control_port) as controller:
-        controller.authenticate()
-        if controller.is_newnym_available():
-            controller.signal(Signal.NEWNYM)
+    try:
+        with Controller.from_port(port=control_port) as controller:
+            controller.authenticate()
+            if controller.is_newnym_available():
+                controller.signal(Signal.NEWNYM)
+    except stem.SocketError as sse:
+        print(sse)
+        error_logger.info(port + " : " + str(sse))
     sleep(5)
 
 
