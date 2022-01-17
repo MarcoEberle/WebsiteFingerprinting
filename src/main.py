@@ -61,10 +61,10 @@ def change_exit_node(port):
             controller.authenticate()
             if controller.is_newnym_available():
                 controller.signal(Signal.NEWNYM)
+                sleep(5)
     except stem.SocketError as sse:
         print(sse)
         error_logger.info(port + " : " + str(sse))
-    sleep(5)
 
 
 # Remove data directory to force tor to use new entry guards.
@@ -105,15 +105,15 @@ if __name__ == '__main__':
     fh_error = logging.FileHandler("error.log", "a")
     error_logger.addHandler(fh_error)
 
-    clean_websites = ["ninisite.com", "delgarm.com", "ikea.com", "pinterest.de", "linkedin.com", "gls-pakete.de",
-                      "instagram.com", "welt.de", "amazon.com", "varzesh3.com",
+    clean_websites = ["kaufland.de", "ninisite.com", "delgarm.com", "pinterest.de", "linkedin.com", "gls-pakete.de",
+                      "instagram.com", "welt.de", "amazon.com", "varzesh3.com", "wetter.com", "chefkoch.de",
                       "youtube.com", "ebay.de", "wikipedia.org", "web.de", "aparat.com", "facebook.com", "filmix.ac",
                       "tiktok.com", "twitter.com", "netflix.com", "dhl.de", "mail.ru", "ok.ru", "t-online.de",
                       "yahoo.com", "bing.com", "vk.com", "whatsapp.com", "reddit.com", "live.com", "digikala.com",
                       "microsoft.com", "yandex.ru", "focus.de", "telewebion.com", "fandom.com", "spiegel.de", "chip.de",
                       "bild.de", "zalando.de", "n-tv.de", "msn.com", "paypal.com", "rokna.net", "telekom.com",
                       "tagesschau.de", "namasha.com", "google.com", "commerzbank.de", "zdf.de", "twitch.tv",
-                      "wetter.com", "chefkoch.de"]  # 53
+                      ]  # 53
 
     dirty_websites = ["xvideos.com", "xnxx.com", "livejasmin.com"]  # 3
 
@@ -141,7 +141,7 @@ if __name__ == '__main__':
     change_entry_guard()
 
     while True:
-        max_tors = 4
+        max_tors = 8
         tor_processes = []
         fingerprint_processes = []
         tor_started = True
@@ -161,7 +161,7 @@ if __name__ == '__main__':
             current_url_index += 1
             current_port_index += 1
 
-        # We wait 90 seconds to wait for all tor processes to either fail or succeed
+        # We wait 95 seconds for all tor processes to either fail or succeed
         sleep(95)
 
         # Run fingerprint_processes
