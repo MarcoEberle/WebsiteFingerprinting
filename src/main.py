@@ -30,7 +30,7 @@ def create_fingerprint(url, port, proxy):
         status_code = response.status_code
         status_logger.info(url + " : " + str(status_code))
         print(response.status_code, url)
-        # print(requests.get("http://httpbin.org/ip", proxies=proxy, headers=header).text)
+        print(requests.get("http://httpbin.org/ip", proxies=proxy, headers=header).text)
     except RequestException as ex:
         print(url + " : ", str(ex))
         error_logger.info(timestamp + " : " + url + " : " + str(ex))
@@ -41,16 +41,16 @@ def create_fingerprint(url, port, proxy):
         file.write(str(status_code))
         file.close()
 
-    try:
-        change_exit_node(port)
-    except Exception:
-        pass
+    change_exit_node(port)
 
 
 def start_tor_process(torrc):
     print("Launching: " + torrc)
-    stem_process = stem.process.launch_tor(torrc_path=torrc, take_ownership=True)
-    return stem_process
+    try:
+        stem_process = stem.process.launch_tor(torrc_path=torrc, take_ownership=True)
+    except OSError as start_error:
+        print(start_error)
+        error_logger.info(torrc + " : " + str(start_error))
 
 
 # Open a new circuit and get a new exit node, e.g. new IP address.
@@ -101,14 +101,15 @@ if __name__ == '__main__':
     fh_error = logging.FileHandler("error.log", "a")
     error_logger.addHandler(fh_error)
 
-    clean_websites = ["linkedin.com", "gls-pakete.de", "instagram.com", "welt.de", "amazon.com", "varzesh3.com",
+    clean_websites = ["ninisite.com", "delgarm.com", "ikea.com", "pinterest.de", "linkedin.com", "gls-pakete.de",
+                      "instagram.com", "welt.de", "amazon.com", "varzesh3.com",
                       "youtube.com", "ebay.de", "wikipedia.org", "web.de", "aparat.com", "facebook.com", "filmix.ac",
                       "tiktok.com", "twitter.com", "netflix.com", "dhl.de", "mail.ru", "ok.ru", "t-online.de",
                       "yahoo.com", "bing.com", "vk.com", "whatsapp.com", "reddit.com", "live.com", "digikala.com",
                       "microsoft.com", "yandex.ru", "focus.de", "telewebion.com", "fandom.com", "spiegel.de", "chip.de",
                       "bild.de", "zalando.de", "n-tv.de", "msn.com", "paypal.com", "rokna.net", "telekom.com",
                       "tagesschau.de", "namasha.com", "google.com", "commerzbank.de", "zdf.de", "twitch.tv",
-                      "wetter.com", "chefkoch.de"]  # 49
+                      "wetter.com", "chefkoch.de"]  # 53
 
     dirty_websites = ["xvideos.com", "xnxx.com", "livejasmin.com"]  # 3
 
@@ -116,49 +117,34 @@ if __name__ == '__main__':
     # home clean Websites are also traced.
     all_websites = clean_websites + dirty_websites + dirty_websites
 
-    ports = ["9150", "9250", "9350", "9450", "9550", "9650", "9750", "9850", "9950", "10050", "10150", "10250", "10350",
-             "10450", "10550", "10650"]
+    ports = [
+        "9150", "9250", "9350", "9450",
+        "9550", "9650", "9750", "9850",
+        "9950", "10050", "10150", "10250",
+        "10350", "10450", "10550", "10650",
+    ]
 
     torrc_path = "/etc/tor/torrc."
     path_to_data_directory = "/home/ebse/Desktop/TorDataDirectory/"
-    change_entry_guard()
-    timeout = 180
+    # Create TorDataDirectory to save Tor Data e.g. Entry Guards
+    if not os.path.exists(path_to_data_directory):
+        os.makedirs(path_to_data_directory)
+    # Create traces folder
+    if not os.path.exists('traces'):
+        os.makedirs('traces')
     current_url_index = 0
     current_port_index = 0
+    change_entry_guard()
 
     while True:
-        max_tors = 8
+        max_tors = 4
         tor_processes = []
         fingerprint_processes = []
-        failed_tors = []
         tor_started = True
-        """
-        for torrc_index in range(1, max_tors + 1):
-            current_url = get_new_url()
-            current_port = get_new_port()
-            proxies = {
-                'http': 'socks5://localhost:' + current_port,
-                'https': 'socks5://localhost:' + current_port
-            }
-            try:
-                # TODO: Parallel instead successively
-                tor_processes.append(start_tor_process(torrc_path + str(torrc_index)))
-            except OSError as error:
-                print(error)
-                error_logger.info("torrc." + str(torrc_index) + " : " + str(error))
-                tor_started = False
-
-            if tor_started:
-                fingerprint_processes.append(
-                    Process(target=create_fingerprint, args=(current_url, current_port, proxies)))
-            current_url_index += 1
-            current_port_index += 1
-            """
 
         for torrc_index in range(1, max_tors + 1):
             arg = torrc_path + str(torrc_index)
             tor_processes.append(Process(target=start_tor_process, args=([arg])))
-
         for tor in tor_processes:
             current_url = get_new_url()
             current_port = get_new_port()
@@ -166,18 +152,13 @@ if __name__ == '__main__':
                 'http': 'socks5://localhost:' + current_port,
                 'https': 'socks5://localhost:' + current_port
             }
-            try:
-                tor.start()
-                print("tor", tor, "started")
-            except OSError as error:
-                print(error)
-                error_logger.info("torrc." + str(torrc_index) + " : " + str(error))
-                tor_started = False
-            if tor_started:
-                fingerprint_processes.append(
-                    Process(target=create_fingerprint, args=(current_url, current_port, proxies)))
+            tor.start()
+            fingerprint_processes.append(Process(target=create_fingerprint, args=(current_url, current_port, proxies)))
             current_url_index += 1
             current_port_index += 1
+
+        # We wait 90 seconds to wait for all tor processes to either fail or succeed
+        sleep(95)
 
         # Run fingerprint_processes
         for process in fingerprint_processes:
@@ -191,5 +172,7 @@ if __name__ == '__main__':
             tor.kill()
         for tor in tor_processes:
             tor.join()
+
+        # Wait some time for stem to fully close processes
         sleep(30)
         change_entry_guard()
