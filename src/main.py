@@ -26,14 +26,14 @@ def create_fingerprint(url, port, proxy):
     header = get_header()
     status_code = 0
     try:
-        response = requests.get(full_url, proxies=proxy, headers=header)
+        response = requests.get(full_url, proxies=proxy, headers=header, timeout=180)
         status_code = response.status_code
         status_logger.info(url + " : " + str(status_code))
         print(response.status_code, url)
         print(requests.get("http://httpbin.org/ip", proxies=proxy, headers=header).text)
-    except RequestException as ex:
-        print(url + " : ", str(ex))
-        error_logger.info(timestamp + " : " + url + " : " + str(ex))
+    except RequestException as req_ex:
+        print(url + " : ", str(req_ex))
+        error_logger.info(timestamp + " : " + url + " : " + str(req_ex))
         pass
     finally:
         tcpdump.kill()
@@ -47,7 +47,7 @@ def create_fingerprint(url, port, proxy):
 def start_tor_process(torrc):
     print("Launching: " + torrc)
     try:
-        stem_process = stem.process.launch_tor(torrc_path=torrc, take_ownership=True)
+        stem.process.launch_tor(torrc_path=torrc, take_ownership=True)
     except OSError as start_error:
         print(start_error)
         error_logger.info(torrc + " : " + str(start_error))
@@ -62,9 +62,9 @@ def change_exit_node(port):
             if controller.is_newnym_available():
                 controller.signal(Signal.NEWNYM)
                 sleep(5)
-    except stem.SocketError as sse:
-        print(sse)
-        error_logger.info(port + " : " + str(sse))
+    except stem.SocketError as stem_error:
+        print(stem_error)
+        error_logger.info(port + " : " + str(stem_error))
 
 
 # Remove data directory to force tor to use new entry guards.
@@ -129,7 +129,7 @@ if __name__ == '__main__':
     ]
 
     torrc_path = "/etc/tor/torrc."
-    path_to_data_directory = "/home/ebse/Desktop/TorDataDirectory/"
+    path_to_data_directory = "/home/user/TorDataDirectory/"
     # Create TorDataDirectory to save Tor Data e.g. Entry Guards
     if not os.path.exists(path_to_data_directory):
         os.makedirs(path_to_data_directory)
@@ -141,7 +141,7 @@ if __name__ == '__main__':
     change_entry_guard()
 
     while True:
-        max_tors = 8
+        max_tors = 16
         tor_processes = []
         fingerprint_processes = []
         tor_started = True
@@ -178,5 +178,5 @@ if __name__ == '__main__':
             tor.join()
 
         # Wait some time for stem to fully close processes
-        sleep(30)
+        sleep(10)
         change_entry_guard()
