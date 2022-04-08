@@ -1,0 +1,89 @@
+2022-04-05 00:43:32.790369 IP (tos 0x0, ttl 64, id 55530, offset 0, flags [DF], proto TCP (6), length 60)
+    127.0.0.1.42098 > 127.0.0.1.9850: Flags [S], cksum 0xfe30 (incorrect -> 0xa8ce), seq 296605424, win 65495, options [mss 65495,sackOK,TS val 757057161 ecr 0,nop,wscale 7], length 0
+2022-04-05 00:43:32.790380 IP (tos 0x0, ttl 64, id 0, offset 0, flags [DF], proto TCP (6), length 60)
+    127.0.0.1.9850 > 127.0.0.1.42098: Flags [S.], cksum 0xfe30 (incorrect -> 0xee83), seq 3313631514, ack 296605425, win 65483, options [mss 65495,sackOK,TS val 757057161 ecr 757057161,nop,wscale 7], length 0
+2022-04-05 00:43:32.790389 IP (tos 0x0, ttl 64, id 55531, offset 0, flags [DF], proto TCP (6), length 52)
+    127.0.0.1.42098 > 127.0.0.1.9850: Flags [.], cksum 0xfe28 (incorrect -> 0x1540), seq 1, ack 1, win 512, options [nop,nop,TS val 757057161 ecr 757057161], length 0
+2022-04-05 00:43:32.790570 IP (tos 0x0, ttl 64, id 55532, offset 0, flags [DF], proto TCP (6), length 55)
+    127.0.0.1.42098 > 127.0.0.1.9850: Flags [P.], cksum 0xfe2b (incorrect -> 0x1033), seq 1:4, ack 1, win 512, options [nop,nop,TS val 757057162 ecr 757057161], length 3
+2022-04-05 00:43:32.790579 IP (tos 0x0, ttl 64, id 60554, offset 0, flags [DF], proto TCP (6), length 52)
+    127.0.0.1.9850 > 127.0.0.1.42098: Flags [.], cksum 0xfe28 (incorrect -> 0x153b), seq 1, ack 4, win 512, options [nop,nop,TS val 757057162 ecr 757057162], length 0
+2022-04-05 00:43:32.790604 IP (tos 0x0, ttl 64, id 60555, offset 0, flags [DF], proto TCP (6), length 54)
+    127.0.0.1.9850 > 127.0.0.1.42098: Flags [P.], cksum 0xfe2a (incorrect -> 0x1031), seq 1:3, ack 4, win 512, options [nop,nop,TS val 757057162 ecr 757057162], length 2
+2022-04-05 00:43:32.790612 IP (tos 0x0, ttl 64, id 55533, offset 0, flags [DF], proto TCP (6), length 52)
+    127.0.0.1.42098 > 127.0.0.1.9850: Flags [.], cksum 0xfe28 (incorrect -> 0x1539), seq 4, ack 3, win 512, options [nop,nop,TS val 757057162 ecr 757057162], length 0
+2022-04-05 00:43:32.840815 IP (tos 0x0, ttl 64, id 55534, offset 0, flags [DF], proto TCP (6), length 62)
+    127.0.0.1.42098 > 127.0.0.1.9850: Flags [P.], cksum 0xfe32 (incorrect -> 0xf1ef), seq 4:14, ack 3, win 512, options [nop,nop,TS val 757057212 ecr 757057162], length 10
+2022-04-05 00:43:32.840837 IP (tos 0x0, ttl 64, id 60556, offset 0, flags [DF], proto TCP (6), length 52)
+    127.0.0.1.9850 > 127.0.0.1.42098: Flags [.], cksum 0xfe28 (incorrect -> 0x14cb), seq 3, ack 14, win 512, options [nop,nop,TS val 757057212 ecr 757057212], length 0
+2022-04-05 00:43:32.969523 IP (tos 0x0, ttl 64, id 60557, offset 0, flags [DF], proto TCP (6), length 62)
+    127.0.0.1.9850 > 127.0.0.1.42098: Flags [P.], cksum 0xfe32 (incorrect -> 0x0f37), seq 3:13, ack 14, win 512, options [nop,nop,TS val 757057341 ecr 757057212], length 10
+2022-04-05 00:43:32.969533 IP (tos 0x0, ttl 64, id 55535, offset 0, flags [DF], proto TCP (6), length 52)
+    127.0.0.1.42098 > 127.0.0.1.9850: Flags [.], cksum 0xfe28 (incorrect -> 0x13bf), seq 14, ack 13, win 512, options [nop,nop,TS val 757057341 ecr 757057341], length 0
+2022-04-05 00:43:32.975347 IP (tos 0x0, ttl 64, id 55536, offset 0, flags [DF], proto TCP (6), length 569)
+    127.0.0.1.42098 > 127.0.0.1.9850: Flags [P.], cksum 0x002e (incorrect -> 0xeef6), seq 14:531, ack 13, win 512, options [nop,nop,TS val 757057346 ecr 757057341], length 517
+2022-04-05 00:43:32.975359 IP (tos 0x0, ttl 64, id 60558, offset 0, flags [DF], proto TCP (6), length 52)
+    127.0.0.1.9850 > 127.0.0.1.42098: Flags [.], cksum 0xfe28 (incorrect -> 0x11b4), seq 13, ack 531, win 508, options [nop,nop,TS val 757057346 ecr 757057346], length 0
+2022-04-05 00:43:33.108942 IP (tos 0x0, ttl 64, id 60559, offset 0, flags [DF], proto TCP (6), length 3381)
+    127.0.0.1.9850 > 127.0.0.1.42098: Flags [P.], cksum 0x0b2a (incorrect -> 0xa454), seq 13:3342, ack 531, win 512, options [nop,nop,TS val 757057480 ecr 757057346], length 3329
+2022-04-05 00:43:33.108955 IP (tos 0x0, ttl 64, id 55537, offset 0, flags [DF], proto TCP (6), length 52)
+    127.0.0.1.42098 > 127.0.0.1.9850: Flags [.], cksum 0xfe28 (incorrect -> 0x03b5), seq 531, ack 3342, win 494, options [nop,nop,TS val 757057480 ecr 757057480], length 0
+2022-04-05 00:43:33.109584 IP (tos 0x0, ttl 64, id 55538, offset 0, flags [DF], proto TCP (6), length 145)
+    127.0.0.1.42098 > 127.0.0.1.9850: Flags [P.], cksum 0xfe85 (incorrect -> 0x4b58), seq 531:624, ack 3342, win 512, options [nop,nop,TS val 757057481 ecr 757057480], length 93
+2022-04-05 00:43:33.109595 IP (tos 0x0, ttl 64, id 60560, offset 0, flags [DF], proto TCP (6), length 52)
+    127.0.0.1.9850 > 127.0.0.1.42098: Flags [.], cksum 0xfe28 (incorrect -> 0x0344), seq 3342, ack 624, win 512, options [nop,nop,TS val 757057481 ecr 757057481], length 0
+2022-04-05 00:43:33.238825 IP (tos 0x0, ttl 64, id 60561, offset 0, flags [DF], proto TCP (6), length 310)
+    127.0.0.1.9850 > 127.0.0.1.42098: Flags [P.], cksum 0xff2a (incorrect -> 0x662d), seq 3342:3600, ack 624, win 512, options [nop,nop,TS val 757057610 ecr 757057481], length 258
+2022-04-05 00:43:33.238836 IP (tos 0x0, ttl 64, id 55539, offset 0, flags [DF], proto TCP (6), length 52)
+    127.0.0.1.42098 > 127.0.0.1.9850: Flags [.], cksum 0xfe28 (incorrect -> 0x0142), seq 624, ack 3600, win 510, options [nop,nop,TS val 757057610 ecr 757057610], length 0
+2022-04-05 00:43:33.239385 IP (tos 0x0, ttl 64, id 55540, offset 0, flags [DF], proto TCP (6), length 419)
+    127.0.0.1.42098 > 127.0.0.1.9850: Flags [P.], cksum 0xff97 (incorrect -> 0x3cce), seq 624:991, ack 3600, win 512, options [nop,nop,TS val 757057610 ecr 757057610], length 367
+2022-04-05 00:43:33.239395 IP (tos 0x0, ttl 64, id 60562, offset 0, flags [DF], proto TCP (6), length 52)
+    127.0.0.1.9850 > 127.0.0.1.42098: Flags [.], cksum 0xfe28 (incorrect -> 0xffd2), seq 3600, ack 991, win 510, options [nop,nop,TS val 757057610 ecr 757057610], length 0
+2022-04-05 00:43:33.368175 IP (tos 0x0, ttl 64, id 60563, offset 0, flags [DF], proto TCP (6), length 220)
+    127.0.0.1.9850 > 127.0.0.1.42098: Flags [P.], cksum 0xfed0 (incorrect -> 0x45a5), seq 3600:3768, ack 991, win 512, options [nop,nop,TS val 757057739 ecr 757057610], length 168
+2022-04-05 00:43:33.370345 IP (tos 0x0, ttl 64, id 21409, offset 0, flags [DF], proto TCP (6), length 60)
+    127.0.0.1.42100 > 127.0.0.1.9850: Flags [S], cksum 0xfe30 (incorrect -> 0x0692), seq 3225798734, win 65495, options [mss 65495,sackOK,TS val 757057741 ecr 0,nop,wscale 7], length 0
+2022-04-05 00:43:33.370357 IP (tos 0x0, ttl 64, id 0, offset 0, flags [DF], proto TCP (6), length 60)
+    127.0.0.1.9850 > 127.0.0.1.42100: Flags [S.], cksum 0xfe30 (incorrect -> 0xbf1d), seq 462501361, ack 3225798735, win 65483, options [mss 65495,sackOK,TS val 757057741 ecr 757057741,nop,wscale 7], length 0
+2022-04-05 00:43:33.370367 IP (tos 0x0, ttl 64, id 21410, offset 0, flags [DF], proto TCP (6), length 52)
+    127.0.0.1.42100 > 127.0.0.1.9850: Flags [.], cksum 0xfe28 (incorrect -> 0xe5d9), seq 1, ack 1, win 512, options [nop,nop,TS val 757057741 ecr 757057741], length 0
+2022-04-05 00:43:33.370468 IP (tos 0x0, ttl 64, id 21411, offset 0, flags [DF], proto TCP (6), length 55)
+    127.0.0.1.42100 > 127.0.0.1.9850: Flags [P.], cksum 0xfe2b (incorrect -> 0xe0cc), seq 1:4, ack 1, win 512, options [nop,nop,TS val 757057742 ecr 757057741], length 3
+2022-04-05 00:43:33.370475 IP (tos 0x0, ttl 64, id 60741, offset 0, flags [DF], proto TCP (6), length 52)
+    127.0.0.1.9850 > 127.0.0.1.42100: Flags [.], cksum 0xfe28 (incorrect -> 0xe5d4), seq 1, ack 4, win 512, options [nop,nop,TS val 757057742 ecr 757057742], length 0
+2022-04-05 00:43:33.370494 IP (tos 0x0, ttl 64, id 60742, offset 0, flags [DF], proto TCP (6), length 54)
+    127.0.0.1.9850 > 127.0.0.1.42100: Flags [P.], cksum 0xfe2a (incorrect -> 0xe0ca), seq 1:3, ack 4, win 512, options [nop,nop,TS val 757057742 ecr 757057742], length 2
+2022-04-05 00:43:33.370502 IP (tos 0x0, ttl 64, id 21412, offset 0, flags [DF], proto TCP (6), length 52)
+    127.0.0.1.42100 > 127.0.0.1.9850: Flags [.], cksum 0xfe28 (incorrect -> 0xe5d2), seq 4, ack 3, win 512, options [nop,nop,TS val 757057742 ecr 757057742], length 0
+2022-04-05 00:43:33.413411 IP (tos 0x0, ttl 64, id 55541, offset 0, flags [DF], proto TCP (6), length 52)
+    127.0.0.1.42098 > 127.0.0.1.9850: Flags [.], cksum 0xfe28 (incorrect -> 0xfdf9), seq 991, ack 3768, win 512, options [nop,nop,TS val 757057784 ecr 757057739], length 0
+2022-04-05 00:43:33.420684 IP (tos 0x0, ttl 64, id 21413, offset 0, flags [DF], proto TCP (6), length 62)
+    127.0.0.1.42100 > 127.0.0.1.9850: Flags [P.], cksum 0xfe32 (incorrect -> 0x72bb), seq 4:14, ack 3, win 512, options [nop,nop,TS val 757057792 ecr 757057742], length 10
+2022-04-05 00:43:33.420702 IP (tos 0x0, ttl 64, id 60743, offset 0, flags [DF], proto TCP (6), length 52)
+    127.0.0.1.9850 > 127.0.0.1.42100: Flags [.], cksum 0xfe28 (incorrect -> 0xe564), seq 3, ack 14, win 512, options [nop,nop,TS val 757057792 ecr 757057792], length 0
+2022-04-05 00:43:33.574474 IP (tos 0x0, ttl 64, id 60744, offset 0, flags [DF], proto TCP (6), length 62)
+    127.0.0.1.9850 > 127.0.0.1.42100: Flags [P.], cksum 0xfe32 (incorrect -> 0xdfb7), seq 3:13, ack 14, win 512, options [nop,nop,TS val 757057946 ecr 757057792], length 10
+2022-04-05 00:43:33.574487 IP (tos 0x0, ttl 64, id 21414, offset 0, flags [DF], proto TCP (6), length 52)
+    127.0.0.1.42100 > 127.0.0.1.9850: Flags [.], cksum 0xfe28 (incorrect -> 0xe426), seq 14, ack 13, win 512, options [nop,nop,TS val 757057946 ecr 757057946], length 0
+2022-04-05 00:43:33.580012 IP (tos 0x0, ttl 64, id 21415, offset 0, flags [DF], proto TCP (6), length 569)
+    127.0.0.1.42100 > 127.0.0.1.9850: Flags [P.], cksum 0x002e (incorrect -> 0x0044), seq 14:531, ack 13, win 512, options [nop,nop,TS val 757057951 ecr 757057946], length 517
+2022-04-05 00:43:33.580021 IP (tos 0x0, ttl 64, id 60745, offset 0, flags [DF], proto TCP (6), length 52)
+    127.0.0.1.9850 > 127.0.0.1.42100: Flags [.], cksum 0xfe28 (incorrect -> 0xe21b), seq 13, ack 531, win 508, options [nop,nop,TS val 757057951 ecr 757057951], length 0
+2022-04-05 00:43:33.746731 IP (tos 0x0, ttl 64, id 60746, offset 0, flags [DF], proto TCP (6), length 3381)
+    127.0.0.1.9850 > 127.0.0.1.42100: Flags [P.], cksum 0x0b2a (incorrect -> 0x551a), seq 13:3342, ack 531, win 512, options [nop,nop,TS val 757058118 ecr 757057951], length 3329
+2022-04-05 00:43:33.746743 IP (tos 0x0, ttl 64, id 21416, offset 0, flags [DF], proto TCP (6), length 52)
+    127.0.0.1.42100 > 127.0.0.1.9850: Flags [.], cksum 0xfe28 (incorrect -> 0xd3da), seq 531, ack 3342, win 494, options [nop,nop,TS val 757058118 ecr 757058118], length 0
+2022-04-05 00:43:33.747309 IP (tos 0x0, ttl 64, id 21417, offset 0, flags [DF], proto TCP (6), length 145)
+    127.0.0.1.42100 > 127.0.0.1.9850: Flags [P.], cksum 0xfe85 (incorrect -> 0xca90), seq 531:624, ack 3342, win 512, options [nop,nop,TS val 757058118 ecr 757058118], length 93
+2022-04-05 00:43:33.747319 IP (tos 0x0, ttl 64, id 60747, offset 0, flags [DF], proto TCP (6), length 52)
+    127.0.0.1.9850 > 127.0.0.1.42100: Flags [.], cksum 0xfe28 (incorrect -> 0xd36b), seq 3342, ack 624, win 512, options [nop,nop,TS val 757058118 ecr 757058118], length 0
+2022-04-05 00:43:33.873736 IP (tos 0x0, ttl 64, id 60748, offset 0, flags [DF], proto TCP (6), length 310)
+    127.0.0.1.9850 > 127.0.0.1.42100: Flags [P.], cksum 0xff2a (incorrect -> 0x953b), seq 3342:3600, ack 624, win 512, options [nop,nop,TS val 757058245 ecr 757058118], length 258
+2022-04-05 00:43:33.873749 IP (tos 0x0, ttl 64, id 21418, offset 0, flags [DF], proto TCP (6), length 52)
+    127.0.0.1.42100 > 127.0.0.1.9850: Flags [.], cksum 0xfe28 (incorrect -> 0xd16d), seq 624, ack 3600, win 510, options [nop,nop,TS val 757058245 ecr 757058245], length 0
+2022-04-05 00:43:33.874299 IP (tos 0x0, ttl 64, id 21419, offset 0, flags [DF], proto TCP (6), length 415)
+    127.0.0.1.42100 > 127.0.0.1.9850: Flags [P.], cksum 0xff93 (incorrect -> 0xa799), seq 624:987, ack 3600, win 512, options [nop,nop,TS val 757058245 ecr 757058245], length 363
+2022-04-05 00:43:33.874311 IP (tos 0x0, ttl 64, id 60749, offset 0, flags [DF], proto TCP (6), length 52)
+    127.0.0.1.9850 > 127.0.0.1.42100: Flags [.], cksum 0xfe28 (incorrect -> 0xd002), seq 3600, ack 987, win 510, options [nop,nop,TS val 757058245 ecr 757058245], length 0
+200, 3.900357723236084, 1.378908395767212

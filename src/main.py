@@ -17,17 +17,21 @@ from fake_headers import Headers
 # TODO: add https://askubuntu.com/questions/530920/tcpdump-permissions-problem
 # sudo chgrp <user_running_this_code> /usr/sbin/tcpdump
 # sudo chmod 750 /usr/sbin/tcpdump
-def create_fingerprint(url, port, proxy):
+def create_fingerprint(url, port, proxy, time_to_launch_tor):
     print("Creating Fingerprint of:", url, port)
     full_url = "https://www." + url + "/"
     timestamp = datetime.datetime.now().strftime("%d.%m_%H:%M:%S.%f")
+    print(timestamp)
     file = open("traces/" + timestamp + "_" + url + ".txt", "w")
     tcpdump = subprocess.Popen(['tcpdump', '-i', 'lo', '-n', '-vv', '-tttt', '-l', 'port', port], stdout=file)
     sleep(5)
     header = get_header()
     status_code = 0
     try:
-        response = requests.get(full_url, proxies=proxy, headers=header, timeout=180)
+        start_trace_time = time.time()
+        response = requests.get(full_url, proxies=proxy, headers=header, timeout=240)
+        end_trace_time = time.time()
+        time_to_trace = end_trace_time - start_trace_time
         status_code = response.status_code
         status_logger.info(url + " : " + str(status_code))
         print(response.status_code, url)
@@ -39,7 +43,7 @@ def create_fingerprint(url, port, proxy):
     finally:
         tcpdump.kill()
         tcpdump.wait()
-        file.write(str(status_code))
+        file.write(str(status_code) + ", " + str(time_to_launch_tor) + ", " + str(time_to_trace))
         file.close()
 
     # change_exit_node(port)
@@ -48,12 +52,13 @@ def create_fingerprint(url, port, proxy):
 def start_tor_process(torrc, url, port, proxy):
     print("Launching: " + torrc)
     try:
-        start = time.time()
+        start_tor_time = time.time()
         stem.process.launch_tor(torrc_path=torrc, take_ownership=True, completion_percent=100, timeout=300)
-        end = time.time()
-        print(end - start)
+        end_tor_time = time.time()
+        print(end_tor_time - start_tor_time)
+        time_to_launch_tor = end_tor_time - start_tor_time
         # run trace the traces here
-        create_fingerprint(url, port, proxy)
+        create_fingerprint(url, port, proxy, time_to_launch_tor)
         print("done", torrc)
     except OSError as start_error:
         print(start_error)
@@ -79,7 +84,7 @@ def change_tor_circuit():
     for files in os.listdir(path_to_data_directory):
         path = os.path.join(path_to_data_directory, files)
         try:
-            shutil.rmtree(path)
+            shutil.rmtree(path, ignore_errors=True)
         except OSError:
             os.remove(path)
 
@@ -101,7 +106,7 @@ def get_header():
     )
     return header.generate()
 
-
+# TODO: Dauer wie lange der Verbindungsaufbau gebraucht hat und wie lange der Download dauerte
 if __name__ == '__main__':
     status_logger = logging.getLogger("status")
     error_logger = logging.getLogger("error")
@@ -131,10 +136,14 @@ if __name__ == '__main__':
         "9550", "9650", "9750", "9850",
         "9950", "10050", "10150", "10250",
         "10350", "10450", "10550", "10650",
+        "10750", "10850", "10950", "11050",
+        "11150", "11250", "11350", "11450",
+        "11550", "11650", "11750", "11850",
+        "11950", "12050", "12150", "12250",
     ]
 
     torrc_path = "/etc/tor/torrc."
-    path_to_data_directory = "/home/ebse/Desktop/TorDataDirectory/"
+    path_to_data_directory = "/home/user/Desktop/TorDataDirectory/"
     # Create TorDataDirectory to save Tor Data e.g. Entry Guards
     if not os.path.exists(path_to_data_directory):
         os.makedirs(path_to_data_directory)
@@ -145,7 +154,7 @@ if __name__ == '__main__':
     current_port_index = 0
     change_tor_circuit()
 
-    max_tors = 8
+    max_tors = 32
 
     while True:
         tor_processes = []
@@ -166,8 +175,8 @@ if __name__ == '__main__':
             tor.start()
 
         for tor in tor_processes:
-            print("joining", tor)
             tor.join()
 
+        sleep(1)
         change_tor_circuit()
         sleep(10)

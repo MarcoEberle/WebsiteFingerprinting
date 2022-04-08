@@ -1,0 +1,15 @@
+2022-04-05 18:29:01.418989 IP (tos 0x0, ttl 64, id 15255, offset 0, flags [DF], proto TCP (6), length 60)
+    127.0.0.1.60030 > 127.0.0.1.10850: Flags [S], cksum 0xfe30 (incorrect -> 0x2ed2), seq 1868592040, win 65495, options [mss 65495,sackOK,TS val 265623921 ecr 0,nop,wscale 7], length 0
+2022-04-05 18:29:01.418999 IP (tos 0x0, ttl 64, id 0, offset 0, flags [DF], proto TCP (6), length 60)
+    127.0.0.1.10850 > 127.0.0.1.60030: Flags [S.], cksum 0xfe30 (incorrect -> 0x8f1f), seq 3956968076, ack 1868592041, win 65483, options [mss 65495,sackOK,TS val 265623921 ecr 265623921,nop,wscale 7], length 0
+2022-04-05 18:29:01.419005 IP (tos 0x0, ttl 64, id 15256, offset 0, flags [DF], proto TCP (6), length 52)
+    127.0.0.1.60030 > 127.0.0.1.10850: Flags [.], cksum 0xfe28 (incorrect -> 0xb5db), seq 1, ack 1, win 512, options [nop,nop,TS val 265623921 ecr 265623921], length 0
+2022-04-05 18:29:01.419111 IP (tos 0x0, ttl 64, id 15257, offset 0, flags [DF], proto TCP (6), length 55)
+    127.0.0.1.60030 > 127.0.0.1.10850: Flags [P.], cksum 0xfe2b (incorrect -> 0xb0ce), seq 1:4, ack 1, win 512, options [nop,nop,TS val 265623922 ecr 265623921], length 3
+2022-04-05 18:29:01.419122 IP (tos 0x0, ttl 64, id 55769, offset 0, flags [DF], proto TCP (6), length 52)
+    127.0.0.1.10850 > 127.0.0.1.60030: Flags [.], cksum 0xfe28 (incorrect -> 0xb5d6), seq 1, ack 4, win 512, options [nop,nop,TS val 265623922 ecr 265623922], length 0
+2022-04-05 18:29:01.419172 IP (tos 0x0, ttl 64, id 55770, offset 0, flags [DF], proto TCP (6), length 54)
+    127.0.0.1.10850 > 127.0.0.1.60030: Flags [P.], cksum 0xfe2a (incorrect -> 0xb0cc), seq 1:3, ack 4, win 512, options [nop,nop,TS val 265623922 ecr 265623922], length 2
+2022-04-05 18:29:01.419188 IP (tos 0x0, ttl 64, id 15258, offset 0, flags [DF], proto TCP (6), length 52)
+    127.0.0.1.60030 > 127.0.0.1.10850: Flags [.], cksum 0xfe28 (incorrect -> 0xb5d4), seq 4, ack 3, win 512, options [nop,nop,TS val 265623922 ecr 265623922], length 0
+200, 7.820338249206543, 0.9250216484069824
