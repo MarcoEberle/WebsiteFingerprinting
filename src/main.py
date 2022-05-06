@@ -91,7 +91,7 @@ def change_tor_circuit():
 
 # TODO: Change at home to all_websites and on HM to clean_websites
 def get_new_url():
-    return clean_websites[current_url_index % len(clean_websites)]
+    return unmonitored_websites[current_url_index % len(unmonitored_websites)]
 
 
 def get_new_port():
@@ -116,7 +116,40 @@ if __name__ == '__main__':
     status_logger.addHandler(fh_status)
     fh_error = logging.FileHandler("error.log", "a")
     error_logger.addHandler(fh_error)
-
+    
+    unmonitored_websites = ["telegram.org", "python.org", "raspberrypi.org", "microsoft.org", "telegram.org",
+                            "dictionary.com", "torproject.org", "yelp.com", "indeed.com", "target.com",
+                            "nytimes.com", "mayoclinic.org", "espn.com", "timeweb.ru", "mit.edu",
+                            "linktr.ee", "hm.com", "irs.gov", "nih.gov", "steampowered.com",
+                            "foxnews.com", "quora.com", "bestbuy.com", "ca.gov", "play.google.com",
+                            "cnet.com", "usnews.com", "zillow.com", "businessinsider.com", "bulbagarden.net",
+                            "genuis.com", "realtor.com", "fedex.com", "bankofamerica.com", "washingtonpost.com",
+                            "investopedia.com", "speedtest.net", "spotify.com", "dcd.gov", "chase.com",
+                            "hulu.com", "xfinity.com", "forbes.com", "wowhead.com", "expedia.com",
+                            "urbandictionary.com", "foodnetwork.com", "nbcnews.com", "macys.com", "ign.com",
+                            "capitalone.com", "costco.com", "theguardian.com", "apartments.com", "cnbc.com",
+                            "glassdoor.com", "yellowpages.com", "att.com", "variety.com", "bbc.com",
+                            "khanacademy.org", "adobe.com", "cbssports.com", "verizon.com", "dictionary.com",
+                            "ria.ru", "ftc.gov", "pinterest.fr", "bloglovin.com", "vice.com",
+                            "orange.fr", "cnil.fr", "discord.com", "naver.com", "sputniknews.com",
+                            "rt.com", "sciencedaily.com", "ted.com", "outlook.com", "newsweek.com",
+                            "sapo.pt", "secureserver.net", "hp.com", "playstation.com", "pexels.com",
+                            "ea.com", "cambridge.org", "apache.org", "ohv.com", "wiley.com",
+                            "offset.com", "ziddu.com", "ibm.com", "cbc.ca", "deezer.com",
+                            "mega.nz", "metro.co.uk", "ox.ac.uk", "pixabay.com", "canva.com",
+                            "dreniq.com", "gfycat.com", "slashdot.org", "depositfiles.com", "cornell.edu",
+                            "addthis.com", "e-monsite.com", "netlify.app", "cornell.edu", "addthis.com",
+                            "stackoverflow.com", "elmundo.es", "addtoany.com", "smh.com.au", "ietf.org",
+                            "pbs.org", "tripadivsor.com", "nginx.org", "biglobe.ne.jp", "themeforest.net",
+                            "rtve.es", "rambler.ru", "sfgate.com", "imageshack.com", "zoom.us",
+                            "gnu.org", "techcrunch.com", "clarin.com", "ca.gov", "rakuten.co.jp",
+                            "buzzfeed.com", "netflix.com", "mashable.com", "aljazeera.com", "plos.org",
+                            "lexpress.fr", "thenai.org", "detik.com", "gizmodo.com", "as.com",
+                            "wikihow.com", "trello.com", "weibo.com", "latimes.com", "doi.org",
+                            "kickstarter.com", "eventbrite.com", "tes.com", "mozilla.com", "alicdn.com",
+                            "php.net", "nationalgeographic.com", "theatlantic.com", "samsung.com", "lemonde.fr",
+                            "disney.com", "whitehouse.gov", "yandex.ru", "reuters.com", "hatena.ne.jp",
+                            ]
     clean_websites = ["kaufland.de", "ninisite.com", "delgarm.com", "pinterest.de", "linkedin.com", "gls-pakete.de",
                       "instagram.com", "welt.de", "amazon.com", "varzesh3.com", "wetter.com", "chefkoch.de",
                       "youtube.com", "ebay.de", "wikipedia.org", "web.de", "aparat.com", "facebook.com", "filmix.ac",
